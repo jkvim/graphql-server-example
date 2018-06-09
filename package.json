@@ -5,14 +5,15 @@
     "build": "tsc",
     "prod": "npm run build  && npm run tslint && npm run start",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "start": "nodemon ./dist/server.js",
+    "start": "ts-node ./server.ts",
     "tslint-check": "tslint-config-prettier-check ./tslint.json"
   },
   "dependencies": {
-    "apollo-server": "^0.3.3",
+    "apollo-server": "^2.0.0-beta.5",
     "express": "^4.16.3",
-    "graph-tools": "^0.1.2",
     "graphql": "^0.13.2",
+    "graphql-tag": "^2.9.2",
+    "graphql-tools": "^3.0.2",
     "mongoose": "^5.1.4",
     "ts-node": "^6.1.0",
     "typescript": "^2.9.1"
