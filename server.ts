@@ -1,4 +1,5 @@
 import { ApolloServer, gql } from 'apollo-server'
+import casual from 'casual';
 
 const books = [
   {
@@ -16,8 +17,13 @@ const typeDefs = gql`
     title: String,
     author: String,
   }
+  type Person {
+    name: String,
+    age: Int
+  }
   type Query {
-    books: [Book]
+    books: [Book],
+    getPerson: [Person]
   }
 `
 const resolvers = {
@@ -26,7 +32,14 @@ const resolvers = {
   }
 }
 
-const server = new ApolloServer({ typeDefs, resolvers })
+const mocks = {
+  Person: () => ({
+    name: casual.name,
+    age: () => casual.integer(0, 120)
+  })
+}
+
+const server = new ApolloServer({ typeDefs, resolvers, mocks })
 
 server.listen().then(({url}) => {
  console.log('Server ready', url)
