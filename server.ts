@@ -16,6 +16,12 @@ const books = [
 const typeDefs = gql`
   scalar Date
 
+  enum AllowedColor {
+    RED
+    GREEN
+    BLUE
+  }
+
   type Book {
     title: String
     author: String
@@ -27,7 +33,8 @@ const typeDefs = gql`
   type Query {
     books: [Book]
     people: [Person]
-    drink: Drink
+    drink: Drink,
+    favoriteColor: AllowedColor
   }
   type Drink {
     create: Date
