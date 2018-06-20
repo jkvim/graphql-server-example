@@ -1,61 +1,56 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer, gql, PubSub } = require('apollo-server');
 
-const books = [
+const pubsub = new PubSub();
+const POST_ADDED = 'POST_ADDED';
+
+const posts = [
   {
-    title: 'Harry Potter',
-    author: 'J.K. Rowling',
-    like: 1,
+    author: 'Dog',
+    comment: 'wow!'
   },
   {
-    title: 'SICP',
-    author: 'Harold Abelson',
-    like: 2,
+    author: 'Bear',
+    comment: 'aaa!',
   },
   {
-    title: 'CSAPP',
-    author: 'Randal Bryant',
-    like: 3,
+    author: 'Cat',
+    comment: 'meaw',
   }
 ]
 
 const typeDefs = gql`
-  type Book {
-    title: String
-    author: String,
-    like: Int
+  type Subscription {
+    postAdded: Post
   }
   type Query {
-    getBook(title: String): Book
+    posts: [Post]
   }
   type Mutation {
-    likeBook(title: String!): Book,
-    addBook(book: BookInput!): [Book]
+    addPost(author: String, comment: String): Post
   }
-  input BookInput {
-    title: String!,
-    author: String!
+  type Post {
+    author: String
+    comment: String
   }
 `
 const resolvers = {
+  Subscription: {
+    postAdded: {
+      subscribe: () => pubsub.asyncIterator([POST_ADDED]),
+    },
+  },
   Query: {
-    getBook: (_, { title }) => {
-      return books.find(book => book.title === title);
-    }
+    posts() {
+      return posts;
+    },
   },
   Mutation: {
-    likeBook: (_, { title }) => {
-      const book = books.find(book => book.title === title)
-      if (book) {
-        book.like += 1;
-        return book;
-      }
+    addPost(root, args, context) {
+      pubsub.publish(POST_ADDED, { postAdded: args });
+      posts.push(args)
+      return args
     },
-    addBook: (_, { book }) => {
-      book.like = 0;
-      books.push(book)
-      return books
-    }
-  }
+  },
 }
 
 const server = new ApolloServer({
