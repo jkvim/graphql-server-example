@@ -5,7 +5,7 @@
     "build": "tsc",
     "prod": "npm run build  && npm run tslint && npm run start",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "start": "ts-node ./server.ts",
+    "start": "nodemon ./server.js",
     "tslint-check": "tslint-config-prettier-check ./tslint.json"
   },
   "dependencies": {
