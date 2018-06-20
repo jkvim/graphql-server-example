@@ -2,8 +2,9 @@ import { ApolloServer, gql } from 'apollo-server'
 
 const typeDefs = gql`
   type Query {
-    hello: String,
+    hello: DogCommand,
   }
+  enum DogCommand { SIT, DOWN, HEEL }
 `
 const resolvers = {
   Query: {
